@@ -13,6 +13,9 @@ import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { createShapeMesh, getHalfHeight } from './shapes.js';
 import { meshesToOBJ, downloadText } from './export.js';
 
+/** Minimum X offset (world units) for a shape to get a symmetry mirror. */
+const SYMMETRY_THRESHOLD = 0.05;
+
 class LowBlynderApp {
   constructor() {
     this.objects = [];        // all meshes in the scene (including mirrors)
@@ -362,7 +365,7 @@ class LowBlynderApp {
     this.objects.push(mesh);
 
     // Create symmetry mirror if X is meaningfully off-center
-    if (this.symmetry && Math.abs(position.x) > 0.05) {
+    if (this.symmetry && Math.abs(position.x) > SYMMETRY_THRESHOLD) {
       const mirror = createShapeMesh(shapeName, THREE);
       mirror.position.set(-position.x, halfH, position.z);
       mirror.scale.x = -1;
@@ -485,7 +488,7 @@ class LowBlynderApp {
       this.scene.add(mesh);
       this.objects.push(mesh);
 
-      if (Math.abs(x) > 0.05) {
+      if (Math.abs(x) > SYMMETRY_THRESHOLD) {
         const mirror = createShapeMesh(shapeName, THREE);
         mirror.position.set(-x, y, z);
         mirror.scale.x = -1;

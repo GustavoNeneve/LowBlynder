@@ -106,12 +106,15 @@ export function createShapeMesh(shapeName, THREE) {
 
 /**
  * Returns the half-height of a mesh's geometry so it can be placed on the ground.
+ * Works for BoxGeometry, CylinderGeometry and any geometry with a bounding box.
  * @param {THREE.Mesh} mesh
  * @returns {number}
  */
 export function getHalfHeight(mesh) {
   const p = mesh.geometry.parameters;
   if (p.height !== undefined) return p.height / 2;
-  // BoxGeometry uses height
-  return 0.5;
+  // Fallback: compute from bounding box for unexpected geometry types
+  mesh.geometry.computeBoundingBox();
+  const bb = mesh.geometry.boundingBox;
+  return (bb.max.y - bb.min.y) / 2;
 }

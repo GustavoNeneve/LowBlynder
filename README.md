@@ -40,6 +40,14 @@ Acesse a aba **[Releases](../../releases)** do repositório e baixe o instalador
 
 ---
 
+### 📦 Publicar uma nova release (mantenedores)
+
+1. Vá em **Actions → Create Release → Run workflow**
+2. Digite a versão (ex: `1.0.0`) e clique **Run workflow**
+3. Aguarde ~10 min — o CI vai compilar e publicar automaticamente na aba **Releases**
+
+---
+
 ### 🔨 Compilar você mesmo
 
 ```bash
@@ -103,10 +111,12 @@ LowBlynder/
 ├── electron/
 │   └── main.js            # Processo principal do Electron
 ├── vite.config.js         # Configuração do bundler Vite
+├── CHANGELOG.md           # Histórico de versões
 ├── package.json           # Dependências e scripts
 └── .github/
     └── workflows/
-        └── build.yml      # CI/CD: gera .exe/.dmg/.AppImage automaticamente
+        ├── build.yml      # CI/CD: gera .exe/.dmg/.AppImage ao criar tag v*
+        └── release.yml    # Cria tag de versão com 1 clique (Actions UI)
 ```
 
 ---

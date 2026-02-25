@@ -22,15 +22,43 @@
 
 ---
 
-## 🚀 Executar localmente
+## 🚀 Executar / Instalar
+
+### ⬇️ Baixar o executável (forma mais fácil)
+
+Acesse a aba **[Releases](../../releases)** do repositório e baixe o instalador para o seu sistema:
+
+| Sistema | Arquivo |
+|---------|---------|
+| **Windows** | `LowBlynder-Setup-x.x.x.exe` — instalador NSIS (duplo clique para instalar) |
+| **macOS**   | `LowBlynder-x.x.x.dmg` — arraste para a pasta Aplicativos |
+| **Linux**   | `LowBlynder-x.x.x.AppImage` — execute diretamente (`chmod +x` + duplo clique) |
+
+> ⚠️ Como o executável não é assinado digitalmente, o Windows mostrará "Windows Defender SmartScreen" e o macOS mostrará "desenvolvedor não identificado". Isso é esperado para projetos open source.
+> - **Windows:** clique em "Mais informações → Executar assim mesmo"
+> - **macOS:** tente `Ctrl+clique → Abrir`; se ainda bloquear, vá em **Configurações do Sistema → Privacidade e Segurança** e clique em **"Abrir assim mesmo"**
+
+---
+
+### 🔨 Compilar você mesmo
 
 ```bash
-# Sem instalação – apenas abra index.html no navegador
-# OU use um servidor local:
-npx serve .
+# 1. Instalar dependências
+npm install
+
+# 2a. Rodar no navegador (desenvolvimento)
+npm run dev
+# Acesse: http://localhost:5173
+
+# 2b. Rodar como app desktop (desenvolvimento)
+npm run start
+
+# 3. Gerar o executável (Windows: .exe | macOS: .dmg | Linux: .AppImage)
+npm run dist
+# O instalador estará em: dist-electron/
 ```
 
-Depois acesse: `http://localhost:3000`
+**Requisitos:** [Node.js 18+](https://nodejs.org/) e npm
 
 ---
 
@@ -65,14 +93,20 @@ Depois acesse: `http://localhost:3000`
 
 ```
 LowBlynder/
-├── index.html       # Aplicação principal (abra no navegador)
+├── index.html             # Aplicação web (fonte)
 ├── css/
-│   └── style.css    # Estilos da interface
+│   └── style.css          # Estilos da interface
 ├── js/
-│   ├── app.js       # Lógica principal (Three.js, cena, interações)
-│   ├── shapes.js    # Definições e criação de formas 3D
-│   └── export.js    # Exportação para OBJ
-└── package.json
+│   ├── app.js             # Lógica principal (Three.js, cena, interações)
+│   ├── shapes.js          # Definições e criação de formas 3D
+│   └── export.js          # Exportação para OBJ
+├── electron/
+│   └── main.js            # Processo principal do Electron
+├── vite.config.js         # Configuração do bundler Vite
+├── package.json           # Dependências e scripts
+└── .github/
+    └── workflows/
+        └── build.yml      # CI/CD: gera .exe/.dmg/.AppImage automaticamente
 ```
 
 ---
@@ -80,5 +114,8 @@ LowBlynder/
 ## 🛠️ Tecnologias
 
 - **[Three.js](https://threejs.org/)** r158 — renderização 3D
-- Vanilla JavaScript ES2020 (sem build step)
+- **[Electron](https://www.electronjs.org/)** 33 — empacotamento como app desktop
+- **[Vite](https://vitejs.dev/)** 5 — bundler (empacota o Three.js localmente)
+- **[electron-builder](https://www.electron.build/)** 25 — gera .exe / .dmg / .AppImage
+- Vanilla JavaScript ES2020
 - CSS moderno com variáveis CSS

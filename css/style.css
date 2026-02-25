@@ -1,0 +1,403 @@
+/* ── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:         #1e1e23;
+  --panel:      #25252b;
+  --panel-alt:  #2b2b32;
+  --border:     #35353d;
+  --accent:     #4a90d9;
+  --accent-dim: #2a5080;
+  --text:       #d8d8e0;
+  --text-dim:   #888894;
+  --text-faint: #55555e;
+  --green:      #44bb88;
+  --red:        #cc4444;
+  --orange:     #dd8833;
+  --radius:     6px;
+  --font:       -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font);
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── App Shell ────────────────────────────────────────────── */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ── Top Toolbar ──────────────────────────────────────────── */
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  height: 46px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.brand {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  margin-right: 6px;
+  white-space: nowrap;
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Push right-side options to the end */
+.toolbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Shared Button Styles ─────────────────────────────────── */
+button {
+  font-family: var(--font);
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--panel-alt);
+  color: var(--text);
+  padding: 5px 10px;
+  transition: background 0.13s, border-color 0.13s, color 0.13s;
+  white-space: nowrap;
+}
+
+button:hover {
+  background: #333340;
+  border-color: var(--accent);
+}
+
+button.active {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-icon {
+  font-size: 0.75rem;
+  padding: 5px 8px;
+}
+
+#btn-export {
+  border-color: #2d7a50;
+  color: #6dcca0;
+}
+#btn-export:hover { background: #1a3d28; }
+
+#btn-clear {
+  border-color: #6a2222;
+  color: #dd8888;
+}
+#btn-clear:hover { background: #3a1414; }
+
+#btn-character {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+#btn-character:hover { background: #3a2010; }
+
+/* ── Toggle Labels ────────────────────────────────────────── */
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.toggle-label input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+}
+
+/* ── Main Area ────────────────────────────────────────────── */
+#main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Left Shapes Panel ────────────────────────────────────── */
+#shapes-panel {
+  width: 155px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 10px 7px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-faint);
+  padding: 0 4px;
+}
+
+.shape-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.group-label {
+  font-size: 0.67rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-faint);
+  padding: 0 3px 3px;
+}
+
+.shape-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 7px 8px;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.78rem;
+  text-align: left;
+  transition: all 0.13s;
+}
+
+.shape-btn:hover {
+  background: #333340;
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.shape-btn.active {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.shape-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.shape-label {
+  flex: 1;
+}
+
+.shape-hint {
+  font-size: 0.62rem;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+/* ── Viewport ─────────────────────────────────────────────── */
+#viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #1a1a1f;
+}
+
+#canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+#placement-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(40, 80, 180, 0.88);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  pointer-events: none;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Viewport border highlight when in placement mode */
+#viewport.placing {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* ── Right Properties Panel ───────────────────────────────── */
+#properties-panel {
+  width: 195px;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 10px 10px;
+  flex-shrink: 0;
+}
+
+#properties-panel .panel-title {
+  margin-bottom: 10px;
+}
+
+#no-selection {
+  padding: 20px 4px 0;
+  text-align: center;
+}
+
+#no-selection p {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+#no-selection .hint-text {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  margin-top: 6px;
+}
+
+.prop-section {
+  margin-bottom: 14px;
+}
+
+.prop-section-label {
+  font-size: 0.67rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-faint);
+  margin-bottom: 6px;
+}
+
+.prop-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+
+.prop-axis {
+  width: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.prop-row input[type="number"] {
+  flex: 1;
+  width: 0;
+  background: #1e1e25;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 3px 6px;
+  font-size: 0.75rem;
+  font-family: var(--font);
+}
+
+.prop-row input[type="number"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type="color"] {
+  width: 100%;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #1e1e25;
+  cursor: pointer;
+  padding: 2px;
+}
+
+#btn-delete {
+  width: 100%;
+  margin-top: 6px;
+  padding: 7px;
+  background: #3a1414;
+  border-color: #8a3030;
+  color: #ffaaaa;
+  font-size: 0.78rem;
+}
+
+#btn-delete:hover {
+  background: #5a1a1a;
+  border-color: var(--red);
+}
+
+.prop-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 10px 0;
+}
+
+/* ── Status Bar ───────────────────────────────────────────── */
+#status-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 3px 14px;
+  background: #17171c;
+  border-top: 1px solid var(--border);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+#status-mode { color: var(--text-dim); }
+
+/* ── Utilities ────────────────────────────────────────────── */
+.hidden { display: none !important; }

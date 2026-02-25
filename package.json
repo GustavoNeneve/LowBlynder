@@ -1,0 +1,12 @@
+{
+  "name": "lowblynder",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Modelador 3D low poly simples para personagens simétricos — 2 cliques para criar uma forma",
+  "scripts": {
+    "start": "npx serve . --listen 3000",
+    "dev":   "npx serve . --listen 3000"
+  },
+  "keywords": ["3d", "low-poly", "modeler", "three.js", "characters"],
+  "license": "MIT"
+}

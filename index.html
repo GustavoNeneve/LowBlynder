@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LowBlynder – Modelador 3D Low Poly</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="description"
+        content="Modelador 3D low poly simples para personagens simétricos. 2 cliques para criar um cubo, mais 2 para uma cabeça de 8 lados." />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ── Top Toolbar ──────────────────────────────────────── -->
+  <header id="toolbar">
+    <span class="brand">🎮 LowBlynder</span>
+
+    <div class="toolbar-sep"></div>
+
+    <!-- Tool mode -->
+    <div class="toolbar-group">
+      <button id="btn-select" class="active btn-icon" title="Selecionar objetos (Esc)">↖ Selecionar</button>
+    </div>
+
+    <div class="toolbar-sep"></div>
+
+    <!-- Transform handles -->
+    <div class="toolbar-group">
+      <button id="btn-translate" class="active btn-icon" title="Mover (G)">↔ Mover</button>
+      <button id="btn-rotate"           class="btn-icon" title="Rotacionar (R)">↻ Girar</button>
+      <button id="btn-scale"            class="btn-icon" title="Escalar (S)">⤢ Escalar</button>
+    </div>
+
+    <div class="toolbar-sep"></div>
+
+    <!-- Options -->
+    <label class="toggle-label" title="Espelhar objetos no eixo X">
+      <input type="checkbox" id="symmetry-toggle" />
+      🔄 Simetria X
+    </label>
+
+    <label class="toggle-label" title="Encaixar na grade ao posicionar">
+      <input type="checkbox" id="snap-toggle" checked />
+      ⊞ Grade
+    </label>
+
+    <!-- Right actions -->
+    <div class="toolbar-right">
+      <button id="btn-character" title="Criar personagem base automaticamente">
+        🧍 Template Personagem
+      </button>
+      <button id="btn-export"   title="Exportar cena como arquivo .OBJ">📥 Exportar OBJ</button>
+      <button id="btn-clear"    title="Apagar toda a cena">🗑 Limpar</button>
+    </div>
+  </header>
+
+  <!-- ── Main Area ────────────────────────────────────────── -->
+  <div id="main">
+
+    <!-- Left: Shapes Panel -->
+    <aside id="shapes-panel">
+      <p class="panel-title">Formas</p>
+
+      <!-- Workflow tip -->
+      <div class="shape-group">
+        <p class="group-label">Como usar</p>
+        <div style="font-size:0.68rem;color:#666;padding:0 3px;line-height:1.6">
+          1️⃣ Clique numa forma<br/>
+          2️⃣ Clique no viewport<br/>
+          ✅ Pronto!
+        </div>
+      </div>
+
+      <div class="shape-group">
+        <p class="group-label">Básico</p>
+        <button class="shape-btn" data-shape="cube">
+          <span class="shape-icon">⬜</span>
+          <span class="shape-label">Cubo</span>
+          <span class="shape-hint">2 cliques</span>
+        </button>
+        <button class="shape-btn" data-shape="head">
+          <span class="shape-icon">⬡</span>
+          <span class="shape-label">Cabeça 8L</span>
+          <span class="shape-hint">2 cliques</span>
+        </button>
+      </div>
+
+      <div class="shape-group">
+        <p class="group-label">Personagem</p>
+        <button class="shape-btn" data-shape="torso">
+          <span class="shape-icon">▭</span>
+          <span class="shape-label">Tronco</span>
+        </button>
+        <button class="shape-btn" data-shape="arm">
+          <span class="shape-icon">▮</span>
+          <span class="shape-label">Braço</span>
+        </button>
+        <button class="shape-btn" data-shape="leg">
+          <span class="shape-icon">▯</span>
+          <span class="shape-label">Perna</span>
+        </button>
+      </div>
+
+      <div class="shape-group">
+        <p class="group-label">Cilindros</p>
+        <button class="shape-btn" data-shape="cyl4">
+          <span class="shape-icon">◇</span>
+          <span class="shape-label">4 lados</span>
+        </button>
+        <button class="shape-btn" data-shape="cyl6">
+          <span class="shape-icon">⬡</span>
+          <span class="shape-label">6 lados</span>
+        </button>
+        <button class="shape-btn" data-shape="cyl8">
+          <span class="shape-icon">⬡</span>
+          <span class="shape-label">8 lados</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Center: 3D Viewport -->
+    <div id="viewport">
+      <canvas id="canvas" tabindex="0"></canvas>
+
+      <div id="placement-hint" class="hidden">
+        📍 Clique no viewport para posicionar a forma
+      </div>
+    </div>
+
+    <!-- Right: Properties Panel -->
+    <aside id="properties-panel">
+      <p class="panel-title">Propriedades</p>
+
+      <div id="no-selection">
+        <p>Nenhum objeto<br/>selecionado</p>
+        <p class="hint-text">Clique em um objeto<br/>para editar</p>
+      </div>
+
+      <div id="object-properties" class="hidden">
+        <!-- Position -->
+        <div class="prop-section">
+          <p class="prop-section-label">Posição</p>
+          <div class="prop-row">
+            <span class="prop-axis" style="color:#e05555">X</span>
+            <input type="number" id="pos-x" step="0.1" />
+          </div>
+          <div class="prop-row">
+            <span class="prop-axis" style="color:#55bb55">Y</span>
+            <input type="number" id="pos-y" step="0.1" />
+          </div>
+          <div class="prop-row">
+            <span class="prop-axis" style="color:#5599ee">Z</span>
+            <input type="number" id="pos-z" step="0.1" />
+          </div>
+        </div>
+
+        <div class="prop-divider"></div>
+
+        <!-- Scale -->
+        <div class="prop-section">
+          <p class="prop-section-label">Escala</p>
+          <div class="prop-row">
+            <span class="prop-axis" style="color:#e05555">X</span>
+            <input type="number" id="scale-x" step="0.1" min="0.01" />
+          </div>
+          <div class="prop-row">
+            <span class="prop-axis" style="color:#55bb55">Y</span>
+            <input type="number" id="scale-y" step="0.1" min="0.01" />
+          </div>
+          <div class="prop-row">
+            <span class="prop-axis" style="color:#5599ee">Z</span>
+            <input type="number" id="scale-z" step="0.1" min="0.01" />
+          </div>
+        </div>
+
+        <div class="prop-divider"></div>
+
+        <!-- Rotation -->
+        <div class="prop-section">
+          <p class="prop-section-label">Rotação (°)</p>
+          <div class="prop-row">
+            <span class="prop-axis" style="color:#e05555">X</span>
+            <input type="number" id="rot-x" step="5" />
+          </div>
+          <div class="prop-row">
+            <span class="prop-axis" style="color:#55bb55">Y</span>
+            <input type="number" id="rot-y" step="5" />
+          </div>
+          <div class="prop-row">
+            <span class="prop-axis" style="color:#5599ee">Z</span>
+            <input type="number" id="rot-z" step="5" />
+          </div>
+        </div>
+
+        <div class="prop-divider"></div>
+
+        <!-- Color -->
+        <div class="prop-section">
+          <p class="prop-section-label">Cor</p>
+          <input type="color" id="obj-color" value="#4488ff" />
+        </div>
+
+        <button id="btn-delete">🗑 Deletar Objeto</button>
+      </div>
+    </aside>
+
+  </div><!-- #main -->
+
+  <!-- ── Status Bar ────────────────────────────────────────── -->
+  <footer id="status-bar">
+    <span id="status-mode">Modo: Selecionar</span>
+    <span id="status-objects">Objetos: 0</span>
+    <span id="status-selected">Selecionado: nenhum</span>
+    <span style="margin-left:auto;color:#444">
+      Atalhos: G Mover · R Girar · S Escalar · Del Apagar · Esc Cancelar
+    </span>
+  </footer>
+
+</div><!-- #app -->
+
+<!-- Three.js via import map (modern ES modules) -->
+<script type="importmap">
+{
+  "imports": {
+    "three":          "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js",
+    "three/addons/":  "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>

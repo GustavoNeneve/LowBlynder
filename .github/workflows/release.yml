@@ -1,0 +1,85 @@
+name: Create Release
+
+# ────────────────────────────────────────────────────────────────
+# How to use:
+#   1. Go to GitHub → Actions → "Create Release" → "Run workflow"
+#   2. Enter the version number (e.g.  1.0.0  — without the "v")
+#   3. Click "Run workflow"
+#
+# This workflow will:
+#   • Tag the latest commit on the branch as v{version}
+#   • Push the tag  →  automatically triggers "Build Executables"
+#     which builds .exe / .dmg / .AppImage and creates a GitHub Release
+# ────────────────────────────────────────────────────────────────
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (without the "v" prefix, e.g. 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    name: Tag & trigger build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate version format
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "❌ Invalid version format: '$VERSION'. Expected: MAJOR.MINOR.PATCH (e.g. 1.0.0)"
+            exit 1
+          fi
+          echo "✅ Version format is valid: $VERSION"
+
+      - name: Check tag does not already exist
+        run: |
+          TAG="v${{ github.event.inputs.version }}"
+          if git ls-remote --tags origin "$TAG" | grep -q "$TAG"; then
+            echo "❌ Tag '$TAG' already exists in the remote. Bump the version."
+            exit 1
+          fi
+          echo "✅ Tag '$TAG' is available"
+
+      - name: Update version in package.json
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = process.env.VERSION;
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          echo "✅ package.json updated to $VERSION"
+
+      - name: Commit version bump
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "chore: bump version to ${{ github.event.inputs.version }}" || echo "Nothing to commit"
+
+      - name: Create and push tag
+        run: |
+          TAG="v${{ github.event.inputs.version }}"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin HEAD --follow-tags
+          echo "🚀 Tag '$TAG' pushed — Build Executables workflow is now running"
+          echo ""
+          echo "👉 Track progress at:"
+          echo "   https://github.com/${{ github.repository }}/actions"
+          echo ""
+          echo "📦 Release will appear at:"
+          echo "   https://github.com/${{ github.repository }}/releases/tag/$TAG"

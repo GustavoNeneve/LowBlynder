@@ -1,0 +1,56 @@
+{
+  "name": "lowblynder",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Modelador 3D low poly simples para personagens simétricos — 2 cliques para criar uma forma",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev":     "vite",
+    "build":   "vite build",
+    "preview": "vite preview",
+    "package": "electron-builder",
+    "dist":    "vite build && electron-builder",
+    "start":   "NODE_ENV=development electron ."
+  },
+  "keywords": ["3d", "low-poly", "modeler", "three.js", "characters", "electron"],
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.158.0"
+  },
+  "devDependencies": {
+    "electron": "^33.4.0",
+    "electron-builder": "^25.1.8",
+    "vite": "^5.4.14"
+  },
+  "build": {
+    "appId": "com.gustavoneneneve.lowblynder",
+    "productName": "LowBlynder",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "output": "dist-electron"
+    },
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
+    },
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "mac": {
+      "target": [
+        { "target": "dmg",  "arch": ["x64", "arm64"] }
+      ]
+    },
+    "linux": {
+      "target": [{ "target": "AppImage", "arch": ["x64"] }]
+    }
+  }
+}
